@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local data / artefacts (demo data is committed separately)
+backend/data/*.db
+backend/data/*.db-*
+backend/data/models/
+backend/data/uploads/
+*.pkl
+*.cbm
+*.joblib
+
+# Environment
+.env
+.env.local
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

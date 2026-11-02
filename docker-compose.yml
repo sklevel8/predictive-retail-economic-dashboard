@@ -1,0 +1,52 @@
+services:
+  api:
+    build:
+      context: ./backend
+    container_name: p10-api
+    environment:
+      P10_ENV: production
+      P10_DB_PATH: /app/data/app.db
+      P10_MODEL_DIR: /app/data/models
+      P10_REDIS_URL: redis://redis:6379/0
+      P10_DEMO_MODE: "true"
+      P10_DEMO_KEY_A: ${P10_DEMO_KEY_A:-p10-demo-tenant-a}
+      P10_DEMO_KEY_B: ${P10_DEMO_KEY_B:-p10-demo-tenant-b}
+      P10_CORS_ORIGINS: "*"
+    ports:
+      - "8000:8000"
+    volumes:
+      - p10-data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: p10-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - p10-redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: ./frontend
+    container_name: p10-dashboard
+    environment:
+      P10_API_URL: http://api:8000/api/v1
+    ports:
+      - "8501:8501"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  p10-data:
+  p10-redis:

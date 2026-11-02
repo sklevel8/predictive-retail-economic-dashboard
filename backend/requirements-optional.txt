@@ -1,0 +1,4 @@
+# Optional accelerators. CatBoost gives the best tabular accuracy when a
+# wheel is available for your Python version; the service falls back to
+# scikit-learn's RandomForest automatically when it is not installed.
+catboost>=1.2
